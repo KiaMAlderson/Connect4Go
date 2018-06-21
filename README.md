@@ -10,5 +10,7 @@ Use with credit
 Created for practice with Go
 
 Must install :
+
 github.com/fatih/color
+
 github.com/ahmetalpbalkan/go-cursor
