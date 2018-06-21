@@ -6,6 +6,8 @@ import (
   "bufio"
   "strings"
   "strconv"
+  "github.com/ahmetalpbalkan/go-cursor"
+  "github.com/fatih/color"
 )
 
 //Aliase for ease of use
@@ -32,7 +34,17 @@ func drawBoard(board Board) {
   p(hor)
   for i := 0; i < 6; i++ {
     for j := 0; j < 7; j++ {
-      p(" | ", board[i][j])
+      toPrint := board[i][j]
+      p(" | ")
+      if (toPrint == "X") {
+        x := color.New(color.FgRed)
+        x.Print(toPrint)
+      } else if (toPrint == "O"){
+        o := color.New(color.FgYellow)
+        o.Print(toPrint)
+      } else {
+        p(toPrint)
+      }
     }
     p(" | \n")
     p(hor)
@@ -148,8 +160,11 @@ func main() {
   var turn string
   board = populateBoard(board)
 
+  p(cursor.ClearEntireScreen())
+  p(cursor.MoveTo(0, 0))
+
   p("-----------------------------------------------------------\n")
-  p("Welcome to Connect4!\n")
+  color.Red("Welcome to Connect4!\n")
   reader := bufio.NewReader(os.Stdin)
   p("X Player 1 name : ")
   name1, _ := reader.ReadString('\n')
@@ -160,6 +175,8 @@ func main() {
   name2 = strings.Trim(name2, "\n")
 
   for i := 0; i < 42; i++ {
+    p(cursor.ClearEntireScreen())
+    p(cursor.MoveTo(0, 0))
     if Even(i){
       p("\n" + name1 + "'s turn!\n")
       turn = "X"
@@ -167,14 +184,16 @@ func main() {
       p("\n" + name2 + "'s turn!\n")
       turn = "O"
     }
+
     drawBoard(board)
     board = makeMove(turn, board)
 
     if checkStatus(board) {
+      drawBoard(board)
       if Even(i){
-        p("\n" + name1 + " wins!\n")
+        p("\n" + name1 + " wins!\n\n")
       } else {
-        p("\n" + name2 + " wins!\n")
+        p("\n" + name2 + " wins!\n\n")
       }
       os.Exit(0)
     }
